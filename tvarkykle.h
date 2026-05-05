@@ -23,10 +23,12 @@ class tvarkykle {
         void irasytiPaskyraUI();
         void lauktiEnter();
         void zodzioTaisymas(std::string& svetaine);
+        void rusiuotiPaskyras();
 
     public:
         void LogoPrint();
         void meniuUI();
+        void rusiavimoMeniuUI();
         void perziuretiPaskyras();
         int gautiPasirinkima();
 };

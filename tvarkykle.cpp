@@ -74,8 +74,19 @@ void tvarkykle::meniuUI() {
                 cout << "[=================================]" << endl;
         }
 
+void tvarkykle::rusiavimoMeniuUI() {
+    LogoPrint();
+        cout << "[  1. Rusuoti pagal Id            ]" << endl;
+        cout << "[  2. Rusuoti pagal Svetaine      ]" << endl;
+        cout << "[     (nuo A iki Z)               ]" << endl;
+        cout << "[  3. Grizti                      ]" << endl;
+        cout << "[=================================]" << endl;
+        
+
+}
+
 void tvarkykle::perziuretiPaskyras() {
-            skaitytiFaila();
+            
 
             if (paskyros.empty()) {
                 cout << "\n[!] Nera saugomu paskyru." << endl;
@@ -133,8 +144,7 @@ int tvarkykle::gautiPasirinkima() {
             break;
         }
         case 2:
-            perziuretiPaskyras();
-            lauktiEnter();
+            rusiuotiPaskyras();
             break;
         case 3:
             cout << "Aciu, kad naudojot programa. Iki!" << endl;
@@ -197,6 +207,7 @@ void tvarkykle::lauktiEnter() {
 }
 
 void tvarkykle::zodzioTaisymas(std::string& svetaine) {
+
      if (svetaine.empty()) return;
     // Pirmą raidę darome didžiąją
     svetaine[0] = std::toupper(static_cast<unsigned char>(svetaine[0]));
@@ -206,3 +217,70 @@ void tvarkykle::zodzioTaisymas(std::string& svetaine) {
                        [](unsigned char c) { return std::tolower(c); });
     }
 }
+
+void tvarkykle::rusiuotiPaskyras(){
+
+    int pasirinkimasRusiavimo;
+
+    while (true) {
+        #ifdef _WIN32
+            system("cls");
+        #else
+            system("clear");
+        #endif
+
+    rusiavimoMeniuUI();
+
+    if (!(cin >> pasirinkimasRusiavimo)) {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            continue;
+        }
+
+        // Išvalome Enter simbolį
+    cin.ignore(1000, '\n');
+
+    skaitytiFaila();
+
+    if (paskyros.empty()) {
+            cout << "\n[!] Nerasta paskyru rusiavimui." << endl;
+            lauktiEnter();
+            return; // Grįžtame į pagrindinį meniu
+        }
+
+    switch (pasirinkimasRusiavimo) {
+        //rusiavimas pagal Id nuo maziausio iki didiziausio
+        case 1: {
+            sort(paskyros.begin(), paskyros.end(), [] (const Paskyra& maziausias, const Paskyra& didiaziausias ) {
+                return maziausias.id < didiaziausias.id;
+            }); 
+            perziuretiPaskyras();
+            lauktiEnter();
+            break;
+        }
+        //rusiavimas pagal svetaine Abeceles tvarka
+        case 2:
+            sort(paskyros.begin(), paskyros.end(), [] (const Paskyra& a, const Paskyra& z ) {
+                return a.svetaine < z.svetaine;
+            }); 
+            perziuretiPaskyras();
+            lauktiEnter();
+            break;
+        //grizta i meniu
+        case 3:
+            return;
+            break;
+
+        default:
+            cout << "Neteisingas pasirinkimas. Bandykite dar karta." << endl;
+             // Leiskime vartotojui pamatyti klaidą prieš nuvalant ekraną
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+    }
+}
+
+
+
+
+
+
