@@ -22,6 +22,7 @@ class tvarkykle {
         bool tikrinimasSlaptazodzio(const std::string& slaptazodis);
         void irasytiPaskyraUI();
         void lauktiEnter();
+        void zodzioTaisymas(std::string& svetaine);
 
     public:
         void LogoPrint();

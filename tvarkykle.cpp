@@ -5,6 +5,7 @@
 #include <thread>
 #include <sstream>
 #include <iomanip>
+#include <algorithm>
 
 
 using namespace std;
@@ -37,8 +38,12 @@ void tvarkykle::rasytiFaila() {
                 return;
             } else{
                 for (const Paskyra& paskyra : paskyros) {
+
+                    string keitmasDidRaide = paskyra.svetaine;
+                    zodzioTaisymas(keitmasDidRaide);
+
                     isvestis << paskyra.id << " "
-                             << paskyra.svetaine << " "
+                             << keitmasDidRaide << " "
                              << paskyra.vardas << " "
                              << paskyra.slaptazodis << endl;
                     }
@@ -189,4 +194,15 @@ void tvarkykle::lauktiEnter() {
     cout << "\nSpauskite ENTER, kad gryztumete i meniu...";
     cin.ignore(1000, '\n');
     cin.get();
+}
+
+void tvarkykle::zodzioTaisymas(std::string& svetaine) {
+     if (svetaine.empty()) return;
+    // Pirmą raidę darome didžiąją
+    svetaine[0] = std::toupper(static_cast<unsigned char>(svetaine[0]));
+    // Visas likusias raides darome mažąsias
+    if (svetaine.size() > 1) {
+        std::transform(svetaine.begin() + 1, svetaine.end(), svetaine.begin() + 1,
+                       [](unsigned char c) { return std::tolower(c); });
+    }
 }
