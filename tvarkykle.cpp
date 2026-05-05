@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <thread>
 #include <sstream>
-#
+#include <iomanip>
 
 using namespace std;
 
@@ -72,13 +72,23 @@ void tvarkykle::perziuretiPaskyras() {
             skaitytiFaila();
 
             if (paskyros.empty()) {
-                cout << "Nera paskyru." << endl;
+                cout << "\n[!] Nera saugomu paskyru." << endl;
                 cout << "\nSpauskite ENTER, kad gryztumete i meniu...";
                 cin.get();
             } else {
-                cout << "Paskyros:" << endl;
+                cout << "\n--- JUSU PASKYROS ---" << endl;
+
+                cout << left << setw(5)  << "ID" 
+                     << setw(18) << "SVETAINE" 
+                     << setw(18) << "VARTOTOJAS" 
+                     << setw(18) << "SLAPTAZODIS" << endl;
+                cout << string(60, '-') << endl;
+
                 for (const Paskyra& paskyra : paskyros) {
-                   cout << paskyra.id << ". [" << paskyra.svetaine << "] " << paskyra.vardas << " : " << paskyra.slaptazodis << endl;
+                    cout << left << setw(5)  << paskyra.id 
+                         << setw(18) << paskyra.svetaine 
+                         << setw(18) << paskyra.vardas 
+                         << setw(18) << paskyra.slaptazodis << endl;
                 }
                 cout << "\nSpauskite ENTER, kad gryztumete i meniu...";
                 cin.get();
@@ -98,7 +108,7 @@ int tvarkykle::gautiPasirinkima() {
         #endif
 
         // 1. Pirmiausia nupiešiame UI
-        meniuUI();
+    meniuUI();
         cout << "Pasirinkite veiksma (1-3): ";
 
         // 2. Tik dabar laukiame įvesties
@@ -109,27 +119,26 @@ int tvarkykle::gautiPasirinkima() {
         }
 
         // Išvalome Enter simbolį
-        cin.ignore(1000, '\n');
+    cin.ignore(1000, '\n');
 
         // 3. Apdorojame pasirinkimą
-        switch (pasirinkimas) {
-            case 1: {
-               irasytiPaskyraUI();
-                    cout << "Paskyra sekmingai issaugota !" << endl;
-                    cout << "\nSpauskite ENTER, kad gryztumete i meniu...";
-                    cin.get();
-                break;
-            }
-            case 2:
-                perziuretiPaskyras();
-                break;
-            case 3:
-                cout << "Aciu, kad naudojot programa. Iki!" << endl;
-                return 3;
-            default:
-                cout << "Neteisingas pasirinkimas. Bandykite dar karta." << endl;
-                // Leiskime vartotojui pamatyti klaidą prieš nuvalant ekraną
-                std::this_thread::sleep_for(std::chrono::seconds(1));
+    switch (pasirinkimas) {
+        case 1: {
+            irasytiPaskyraUI();
+            cout << "\nSpauskite ENTER, kad gryztumete i meniu...";
+            cin.get();
+            break;
+        }
+        case 2:
+            perziuretiPaskyras();
+            break;
+        case 3:
+            cout << "Aciu, kad naudojot programa. Iki!" << endl;
+            return 3;
+        default:
+            cout << "Neteisingas pasirinkimas. Bandykite dar karta." << endl;
+             // Leiskime vartotojui pamatyti klaidą prieš nuvalant ekraną
+            std::this_thread::sleep_for(std::chrono::seconds(1));
         }
     }
 }
