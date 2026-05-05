@@ -6,6 +6,7 @@
 #include <sstream>
 #include <iomanip>
 
+
 using namespace std;
 
 void tvarkykle::isvalytiAtminti() {
@@ -73,8 +74,7 @@ void tvarkykle::perziuretiPaskyras() {
 
             if (paskyros.empty()) {
                 cout << "\n[!] Nera saugomu paskyru." << endl;
-                cout << "\nSpauskite ENTER, kad gryztumete i meniu...";
-                cin.get();
+                lauktiEnter();
             } else {
                 cout << "\n--- JUSU PASKYROS ---" << endl;
 
@@ -88,10 +88,9 @@ void tvarkykle::perziuretiPaskyras() {
                     cout << left << setw(5)  << paskyra.id 
                          << setw(18) << paskyra.svetaine 
                          << setw(18) << paskyra.vardas 
-                         << setw(18) << paskyra.slaptazodis << endl;
+                         << setw(18) << "************" << endl;
                 }
-                cout << "\nSpauskite ENTER, kad gryztumete i meniu...";
-                cin.get();
+                lauktiEnter();
             }
         }
 
@@ -125,12 +124,12 @@ int tvarkykle::gautiPasirinkima() {
     switch (pasirinkimas) {
         case 1: {
             irasytiPaskyraUI();
-            cout << "\nSpauskite ENTER, kad gryztumete i meniu...";
-            cin.get();
+            lauktiEnter();
             break;
         }
         case 2:
             perziuretiPaskyras();
+            lauktiEnter();
             break;
         case 3:
             cout << "Aciu, kad naudojot programa. Iki!" << endl;
@@ -163,7 +162,7 @@ bool tvarkykle::TikrinimasSlaptazodzio(const std::string& slaptazodis) {
     return turiDidziaja && turiMaziaja && turiSkaiciu && turiSpecialu;
 }
         
- void tvarkykle::irasytiPaskyraUI() {
+void tvarkykle::irasytiPaskyraUI() {
     Paskyra naujaPaskyra;
     naujaPaskyra.id = paskyros.size() + 1;
     cout << "Iveskite svetaine: ";
@@ -185,3 +184,9 @@ bool tvarkykle::TikrinimasSlaptazodzio(const std::string& slaptazodis) {
 
     cout << "Paskyra sekmingai issaugota !" << endl;
 }       
+
+void tvarkykle::lauktiEnter() {
+    cout << "\nSpauskite ENTER, kad gryztumete i meniu...";
+    cin.ignore(1000, '\n');
+    cin.get();
+}

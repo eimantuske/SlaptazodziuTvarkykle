@@ -20,6 +20,7 @@ class tvarkykle {
         void issaugotiPaskyra(const Paskyra& paskyra);
         bool TikrinimasSlaptazodzio(const std::string& slaptazodis);
         void irasytiPaskyraUI();
+        void lauktiEnter();
 
     public:
         void LogoPrint();
