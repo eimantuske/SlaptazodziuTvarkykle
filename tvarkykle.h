@@ -7,6 +7,7 @@ struct Paskyra {
     std::string svetaine;
     std::string vardas;
     std::string slaptazodis;
+    std::string sukurta;
 };
 
 class tvarkykle {
@@ -24,6 +25,7 @@ class tvarkykle {
         void lauktiEnter();
         void zodzioTaisymas(std::string& svetaine);
         void rusiuotiPaskyras();
+        std::string dabartinisLaikas();
 
     public:
         void LogoPrint();

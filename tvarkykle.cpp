@@ -6,6 +6,7 @@
 #include <sstream>
 #include <iomanip>
 #include <algorithm>
+#include <ctime>
 
 
 using namespace std;
@@ -24,7 +25,7 @@ void tvarkykle::skaitytiFaila() {
                 return;
             }
             Paskyra naujaPaskyra;
-            while (ivestis >> naujaPaskyra.id >> naujaPaskyra.svetaine >> naujaPaskyra.vardas >> naujaPaskyra.slaptazodis) {
+            while (ivestis >> naujaPaskyra.id >> naujaPaskyra.svetaine >> naujaPaskyra.vardas >> naujaPaskyra.slaptazodis >> naujaPaskyra.sukurta) {
             paskyros.push_back(naujaPaskyra);
         }
         ivestis.close();
@@ -45,7 +46,8 @@ void tvarkykle::rasytiFaila() {
                     isvestis << paskyra.id << " "
                              << keitmasDidRaide << " "
                              << paskyra.vardas << " "
-                             << paskyra.slaptazodis << endl;
+                             << paskyra.slaptazodis << " "
+                             << paskyra.sukurta << endl;
                     }
                 isvestis.close();
             }
@@ -97,16 +99,17 @@ void tvarkykle::perziuretiPaskyras() {
                 cout << left << setw(5)  << "ID" 
                      << setw(18) << "SVETAINE" 
                      << setw(18) << "VARTOTOJAS" 
-                     << setw(18) << "SLAPTAZODIS" << endl;
+                     << setw(18) << "SLAPTAZODIS"
+                     << setw(18) << "SUKURIMO DATA" << endl;
                 cout << string(60, '-') << endl;
 
                 for (const Paskyra& paskyra : paskyros) {
                     cout << left << setw(5)  << paskyra.id 
                          << setw(18) << paskyra.svetaine 
                          << setw(18) << paskyra.vardas 
-                         << setw(18) << "************" << endl;
+                         << setw(18) << "************" 
+                         << setw(18) << paskyra.sukurta << endl;
                 }
-                lauktiEnter();
             }
         }
 
@@ -195,6 +198,7 @@ void tvarkykle::irasytiPaskyraUI() {
     } while (!tikrinimasSlaptazodzio(slaptazodis));
     
     naujaPaskyra.slaptazodis = slaptazodis;
+    naujaPaskyra.sukurta = dabartinisLaikas();
     issaugotiPaskyra(naujaPaskyra);
 
     cout << "Paskyra sekmingai issaugota !" << endl;
@@ -279,7 +283,16 @@ void tvarkykle::rusiuotiPaskyras(){
     }
 }
 
-
+string tvarkykle::dabartinisLaikas() { 
+    time_t dabar = time(0);
+    struct tm tstruct;
+    char buf[80];
+    tstruct = *localtime(&dabar);
+    
+    strftime(buf, sizeof(buf), "%Y-%m-%d_%H:%M:%S", &tstruct);
+    
+    return std::string(buf); // Konvertuojame char masyvą į saugų C++ string
+}
 
 
 
