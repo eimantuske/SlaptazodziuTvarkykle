@@ -142,7 +142,7 @@ int tvarkykle::gautiPasirinkima() {
     }
 }
 
-bool tvarkykle::TikrinimasSlaptazodzio(const std::string& slaptazodis) {
+bool tvarkykle::tikrinimasSlaptazodzio(const std::string& slaptazodis) {
     if (slaptazodis.length() < 8) {
         return false;
     }
@@ -174,10 +174,10 @@ void tvarkykle::irasytiPaskyraUI() {
     do {
         cout << "Iveskite slaptazodi: ";
         getline(cin, slaptazodis);
-        if (!TikrinimasSlaptazodzio(slaptazodis)) {
+        if (!tikrinimasSlaptazodzio(slaptazodis)) {
             cout << "Slaptazodis turi buti bent 8 simboliu, ir tureti didziaja raide, maziaja raide, skaiciu ir specialu simboli." << endl;
         }
-    } while (!TikrinimasSlaptazodzio(slaptazodis));
+    } while (!tikrinimasSlaptazodzio(slaptazodis));
     
     naujaPaskyra.slaptazodis = slaptazodis;
     issaugotiPaskyra(naujaPaskyra);

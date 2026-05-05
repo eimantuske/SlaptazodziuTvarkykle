@@ -13,12 +13,13 @@ class tvarkykle {
     private:
         std::vector<Paskyra> paskyros;
         const std::string failas = "paskyros.txt";
+        const std::string configFailas = "config.txt";
 
         void isvalytiAtminti();
         void skaitytiFaila();
         void rasytiFaila();
         void issaugotiPaskyra(const Paskyra& paskyra);
-        bool TikrinimasSlaptazodzio(const std::string& slaptazodis);
+        bool tikrinimasSlaptazodzio(const std::string& slaptazodis);
         void irasytiPaskyraUI();
         void lauktiEnter();
 
