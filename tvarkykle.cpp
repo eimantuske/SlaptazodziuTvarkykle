@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <thread>
 #include <sstream>
+#
 
 using namespace std;
 
@@ -86,6 +87,9 @@ void tvarkykle::perziuretiPaskyras() {
 
 int tvarkykle::gautiPasirinkima() {
     int pasirinkimas;
+
+    skaitytiFaila();
+
     while (true) {
         #ifdef _WIN32
             system("cls");
@@ -110,16 +114,7 @@ int tvarkykle::gautiPasirinkima() {
         // 3. Apdorojame pasirinkimą
         switch (pasirinkimas) {
             case 1: {
-                Paskyra naujaPaskyra;
-                naujaPaskyra.id = paskyros.size() + 1;
-                    cout << "Iveskite svetaine: ";
-                    getline(cin, naujaPaskyra.svetaine);
-                    cout << "Iveskite vartotojo varda: ";
-                    getline(cin, naujaPaskyra.vardas);
-                    cout << "Iveskite slaptazodi: ";
-                    getline(cin, naujaPaskyra.slaptazodis);
-                    issaugotiPaskyra(naujaPaskyra);
-
+               irasytiPaskyraUI();
                     cout << "Paskyra sekmingai issaugota !" << endl;
                     cout << "\nSpauskite ENTER, kad gryztumete i meniu...";
                     cin.get();
@@ -159,4 +154,25 @@ bool tvarkykle::TikrinimasSlaptazodzio(const std::string& slaptazodis) {
     return turiDidziaja && turiMaziaja && turiSkaiciu && turiSpecialu;
 }
         
-        
+ void tvarkykle::irasytiPaskyraUI() {
+    Paskyra naujaPaskyra;
+    naujaPaskyra.id = paskyros.size() + 1;
+    cout << "Iveskite svetaine: ";
+    getline(cin, naujaPaskyra.svetaine);
+    cout << "Iveskite vartotojo varda: ";
+    getline(cin, naujaPaskyra.vardas);
+    
+    string slaptazodis;
+    do {
+        cout << "Iveskite slaptazodi: ";
+        getline(cin, slaptazodis);
+        if (!TikrinimasSlaptazodzio(slaptazodis)) {
+            cout << "Slaptazodis turi buti bent 8 simboliu, ir tureti didziaja raide, maziaja raide, skaiciu ir specialu simboli." << endl;
+        }
+    } while (!TikrinimasSlaptazodzio(slaptazodis));
+    
+    naujaPaskyra.slaptazodis = slaptazodis;
+    issaugotiPaskyra(naujaPaskyra);
+
+    cout << "Paskyra sekmingai issaugota !" << endl;
+}       
