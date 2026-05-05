@@ -45,7 +45,7 @@ void tvarkykle::rasytiFaila() {
             
         }
 
-void tvarkykle::pridetiPaskyra(const Paskyra& paskyra) {
+void tvarkykle::issaugotiPaskyra(const Paskyra& paskyra) {
             paskyros.push_back(paskyra);   
             rasytiFaila();
         }
@@ -118,9 +118,9 @@ int tvarkykle::gautiPasirinkima() {
                     getline(cin, naujaPaskyra.vardas);
                     cout << "Iveskite slaptazodi: ";
                     getline(cin, naujaPaskyra.slaptazodis);
-                    pridetiPaskyra(naujaPaskyra);
+                    issaugotiPaskyra(naujaPaskyra);
 
-                    cout << "Paskyra sekmingai prideta!" << endl;
+                    cout << "Paskyra sekmingai issaugota !" << endl;
                     cout << "\nSpauskite ENTER, kad gryztumete i meniu...";
                     cin.get();
                 break;
@@ -134,8 +134,6 @@ int tvarkykle::gautiPasirinkima() {
             default:
                 cout << "Neteisingas pasirinkimas. Bandykite dar karta." << endl;
                 // Leiskime vartotojui pamatyti klaidą prieš nuvalant ekraną
-                #include <chrono>
-                #include <thread>
                 std::this_thread::sleep_for(std::chrono::seconds(1));
         }
     }

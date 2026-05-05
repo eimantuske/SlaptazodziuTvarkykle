@@ -17,7 +17,7 @@ class tvarkykle {
         void isvalytiAtminti();
         void skaitytiFaila();
         void rasytiFaila();
-        void pridetiPaskyra(const Paskyra& paskyra);
+        void issaugotiPaskyra(const Paskyra& paskyra);
         bool TikrinimasSlaptazodzio(const std::string& slaptazodis);
 
     public:
