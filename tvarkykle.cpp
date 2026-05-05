@@ -78,7 +78,7 @@ void tvarkykle::perziuretiPaskyras() {
                 cout << "Paskyros:" << endl;
                 for (const Paskyra& paskyra : paskyros) {
                    cout << paskyra.id << ". [" << paskyra.svetaine << "] " << paskyra.vardas << " : " << paskyra.slaptazodis << endl;
-                    }
+                }
                 cout << "\nSpauskite ENTER, kad gryztumete i meniu...";
                 cin.get();
             }
@@ -141,5 +141,24 @@ int tvarkykle::gautiPasirinkima() {
     }
 }
 
+bool tvarkykle::TikrinimasSlaptazodzio(const std::string& slaptazodis) {
+    if (slaptazodis.length() < 8) {
+        return false;
+    }
+    bool turiDidziaja = false;
+    bool turiMaziaja = false;
+    bool turiSkaiciu = false;
+    bool turiSpecialu = false;
+
+    for (char c : slaptazodis) {
+
+        if (isupper(c)) turiDidziaja = true;
+        else if (islower(c)) turiMaziaja = true;
+        else if (isdigit(c)) turiSkaiciu = true;
+        else if (ispunct(c)) turiSpecialu = true; 
+    }
+    
+    return turiDidziaja && turiMaziaja && turiSkaiciu && turiSpecialu;
+}
         
         
