@@ -22,4 +22,6 @@ class tvarkykle {
         int gautiPasirinkima();
         tvarkykle();
         void isvestiLentele();
+        void vykdyti();
+        
 };

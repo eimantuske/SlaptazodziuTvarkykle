@@ -25,6 +25,7 @@ void tvarkykle::meniuUI() {
                 cout << "[  2. Perziureti visas paskyras   ]" << endl;
                 cout << "[  3. Iseiti is programos         ]" << endl;
                 cout << "[=================================]" << endl;
+                cout << "Pasirinkite veiksma (1-3): ";
         }
 
 void tvarkykle::rusiavimoMeniuUI() {
@@ -65,49 +66,13 @@ void tvarkykle::perziuretiPaskyras() {
 
 int tvarkykle::gautiPasirinkima() {
     int pasirinkimas;
-
-    saugykla.skaitytiFaila();
-
-    while (true) {
-        #ifdef _WIN32
-            system("cls");
-        #else
-            system("clear");
-        #endif
-
-        // 1. Pirmiausia nupiešiame UI
-    meniuUI();
-        cout << "Pasirinkite veiksma (1-3): ";
-
-        // 2. Tik dabar laukiame įvesties
-        if (!(cin >> pasirinkimas)) {
-            cin.clear();
-            cin.ignore(1000, '\n');
-            continue;
-        }
-
-        // Išvalome Enter simbolį
-    cin.ignore(1000, '\n');
-
-        // 3. Apdorojame pasirinkimą
-    switch (pasirinkimas) {
-        case 1: {
-            irasytiPaskyraUI();
-            lauktiEnter();
-            break;
-        }
-        case 2:
-            rusiuotiPaskyras();
-            break;
-        case 3:
-            cout << "Aciu, kad naudojot programa. Iki!" << endl;
-            return 3;
-        default:
-            cout << "Neteisingas pasirinkimas. Bandykite dar karta." << endl;
-             // Leiskime vartotojui pamatyti klaidą prieš nuvalant ekraną
-            std::this_thread::sleep_for(std::chrono::seconds(1));
-        }
+    if (!(cin >> pasirinkimas)) {
+        cin.clear();
+        cin.ignore(1000, '\n');
+        return -1; // Grąžiname -1, jei vartotojas įvedė nesąmonę (pvz., raidę)
     }
+    cin.ignore(1000, '\n'); // Išvalome Enter simbolį
+    return pasirinkimas;
 }
    
 void tvarkykle::irasytiPaskyraUI() {
@@ -140,76 +105,18 @@ void tvarkykle::irasytiPaskyraUI() {
 
 void tvarkykle::lauktiEnter() {
     cout << "\nSpauskite ENTER, kad gryztumete i meniu...";
-    cin.ignore(1000, '\n');
     cin.get();
-}
-
-void tvarkykle::rusiuotiPaskyras(){
-
-    int pasirinkimasRusiavimo;
-
-    while (true) {
-        #ifdef _WIN32
-            system("cls");
-        #else
-            system("clear");
-        #endif
-
-    rusiavimoMeniuUI();
-
-    if (!(cin >> pasirinkimasRusiavimo)) {
-            cin.clear();
-            cin.ignore(1000, '\n');
-            continue;
-        }
-
-        // Išvalome Enter simbolį
-    cin.ignore(1000, '\n');
-
-    saugykla.skaitytiFaila();
-
-    if (saugykla.paskyros.empty()) {
-            cout << "\n[!] Nerasta paskyru rusiavimui." << endl;
-            lauktiEnter();
-            return; // Grįžtame į pagrindinį meniu
-        }
-
-    switch (pasirinkimasRusiavimo) {
-        //rusiavimas pagal Id nuo maziausio iki didiziausio
-        case 1: {
-            sort(saugykla.paskyros.begin(), saugykla.paskyros.end(), [] (const Paskyra& maziausias, const Paskyra& didiaziausias ) {
-                return maziausias.id < didiaziausias.id;
-            }); 
-            perziuretiPaskyras();
-            lauktiEnter();
-            break;
-        }
-        //rusiavimas pagal svetaine Abeceles tvarka
-        case 2:
-            sort(saugykla.paskyros.begin(), saugykla.paskyros.end(), [] (const Paskyra& a, const Paskyra& z ) {
-                return a.svetaine < z.svetaine;
-            }); 
-            perziuretiPaskyras();
-            lauktiEnter();
-            break;
-        //grizta i meniu
-        case 3:
-            return;
-            break;
-
-        default:
-            cout << "Neteisingas pasirinkimas. Bandykite dar karta." << endl;
-             // Leiskime vartotojui pamatyti klaidą prieš nuvalant ekraną
-            std::this_thread::sleep_for(std::chrono::seconds(1));
-        }
-    }
 }
     
      tvarkykle::tvarkykle() {
+        konf.uzkrauti();
         saugykla.skaitytiFaila();
 }
 
 void tvarkykle::isvestiLentele() {
+    
+    konf.uzkrauti();
+    
     // 1. Antraštė (Header)
     cout << left << setw(5) << "ID" 
          << setw(18) << "SVETAINE" 
@@ -245,7 +152,81 @@ void tvarkykle::isvestiLentele() {
     }
 }
 
+void tvarkykle::vykdyti() {
+    // Failą nuskaitome TIK VIENĄ KARTĄ startuojant programai
+    saugykla.skaitytiFaila();
 
+    while (true) {
+        #ifdef _WIN32
+            system("cls");
+        #else
+            system("clear");
+        #endif
 
+        meniuUI(); // 1. Parodome meniu
 
+        int pasirinkimas = gautiPasirinkima(); // 2. Gauname vartotojo įvestį
+
+        // 3. Reaguojame į įvestį
+        switch (pasirinkimas) {
+            case 1:
+                irasytiPaskyraUI();
+                lauktiEnter();
+                break;
+            case 2:
+                rusiuotiPaskyras(); // Iškviečiame rūšiavimo / peržiūros meniu
+                break;
+            case 3:
+                cout << "Aciu, kad naudojot programa. Iki!" << endl;
+                return; // Baigiame programą
+            default:
+                cout << "Neteisingas pasirinkimas. Bandykite dar karta." << endl;
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+    }
+}
+
+void tvarkykle::rusiuotiPaskyras() {
+    if (saugykla.paskyros.empty()) {
+        cout << "\n[!] Nerasta paskyru rusiavimui." << endl;
+        lauktiEnter();
+        return; // Grįžtame atgal, jei tuščia
+    }
+
+    while (true) {
+        #ifdef _WIN32
+            system("cls");
+        #else
+            system("clear");
+        #endif
+
+        rusiavimoMeniuUI();
+
+        int pasirinkimasRusiavimo = gautiPasirinkima(); // NAUDOJAME MŪSŲ ŠVARIĄ FUNKCIJĄ
+
+        if (pasirinkimasRusiavimo == 3) return; // Grįžti atgal į pagrindinį meniu
+
+        switch (pasirinkimasRusiavimo) {
+            case 1: 
+                sort(saugykla.paskyros.begin(), saugykla.paskyros.end(), [](const Paskyra& a, const Paskyra& b) {
+                    return a.id < b.id;
+                }); 
+                isvestiLentele(); // NAUDOJAME TVARKINGĄ LENTELĘ SU NUSTATYMAIS
+                lauktiEnter();
+                return;
+            
+            case 2:
+                sort(saugykla.paskyros.begin(), saugykla.paskyros.end(), [](const Paskyra& a, const Paskyra& b) {
+                    return a.svetaine < b.svetaine;
+                }); 
+                isvestiLentele(); // NAUDOJAME TVARKINGĄ LENTELĘ SU NUSTATYMAIS
+                lauktiEnter();
+                return;
+
+            default:
+                cout << "Neteisingas pasirinkimas. Bandykite dar karta." << endl;
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+    }
+}
 

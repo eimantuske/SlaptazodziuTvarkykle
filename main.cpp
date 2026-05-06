@@ -9,7 +9,7 @@ int main() {
 
     config.uzkrauti();
 
-    sistema.gautiPasirinkima();
+    sistema.vykdyti();
 
     return 0;
 }

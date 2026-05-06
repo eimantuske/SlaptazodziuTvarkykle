@@ -45,7 +45,7 @@ void Konfiguracija::uzkrauti() {
             nst.rodytiLaika = (nustatymoDuomenys == "true");
         } 
         else if (nustatymoPavadinimas == "sleptiSlaptazodzius") {
-            nst.sleptiSlaptazodzius = (nustatymoPavadinimas == "true");
+            nst.sleptiSlaptazodzius = (nustatymoDuomenys == "true");
         } 
         else if (nustatymoPavadinimas== "failas") {
             nst.failas = nustatymoDuomenys;
