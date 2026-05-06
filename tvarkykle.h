@@ -2,10 +2,12 @@
 #include "bibliotekos.h"
 #include "duomenuValdymas.h"
 #include "irankiai.h"
+#include "konfiguracija.h"
 
 class tvarkykle {
     private:
-        duomenuValdymas saugykla;    
+        duomenuValdymas saugykla;  
+        Konfiguracija konf;  
 
         void isvalytiAtminti();
         void irasytiPaskyraUI();
@@ -19,4 +21,5 @@ class tvarkykle {
         void perziuretiPaskyras();
         int gautiPasirinkima();
         tvarkykle();
+        void isvestiLentele();
 };
