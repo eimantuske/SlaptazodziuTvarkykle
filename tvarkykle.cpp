@@ -1,62 +1,13 @@
+#include "bibliotekos.h"
 #include "tvarkykle.h"
-#include <iostream>
-#include <fstream>
-#include <cstdlib>
-#include <thread>
-#include <sstream>
-#include <iomanip>
-#include <algorithm>
-#include <ctime>
+#include "duomenuValdymas.h"
+
 
 
 using namespace std;
 
 void tvarkykle::isvalytiAtminti() {
-    paskyros.clear();
-        }
-
-void tvarkykle::skaitytiFaila() {
-        paskyros.clear();
-        
-        ifstream ivestis(failas);
-
-        if (!ivestis.is_open()) {
-                cerr << "Nepavyko atidaryti failo: " << failas << endl;
-                return;
-            }
-            Paskyra naujaPaskyra;
-            while (ivestis >> naujaPaskyra.id >> naujaPaskyra.svetaine >> naujaPaskyra.vardas >> naujaPaskyra.slaptazodis >> naujaPaskyra.sukurta) {
-            paskyros.push_back(naujaPaskyra);
-        }
-        ivestis.close();
-}
-
-void tvarkykle::rasytiFaila() {
-            ofstream isvestis(failas);
-
-            if (!isvestis.is_open()) {
-                cerr << "Nepavyko atidaryti failo rasyti: " << failas << endl;
-                return;
-            } else{
-                for (const Paskyra& paskyra : paskyros) {
-
-                    string keitmasDidRaide = paskyra.svetaine;
-                    zodzioTaisymas(keitmasDidRaide);
-
-                    isvestis << paskyra.id << " "
-                             << keitmasDidRaide << " "
-                             << paskyra.vardas << " "
-                             << paskyra.slaptazodis << " "
-                             << paskyra.sukurta << endl;
-                    }
-                isvestis.close();
-            }
-            
-        }
-
-void tvarkykle::issaugotiPaskyra(const Paskyra& paskyra) {
-            paskyros.push_back(paskyra);   
-            rasytiFaila();
+    saugykla.paskyros.clear();
         }
         
 void tvarkykle::LogoPrint() {
@@ -89,8 +40,7 @@ void tvarkykle::rusiavimoMeniuUI() {
 
 void tvarkykle::perziuretiPaskyras() {
             
-
-            if (paskyros.empty()) {
+            if (saugykla.paskyros.empty()) {
                 cout << "\n[!] Nera saugomu paskyru." << endl;
                 lauktiEnter();
             } else {
@@ -101,9 +51,9 @@ void tvarkykle::perziuretiPaskyras() {
                      << setw(18) << "VARTOTOJAS" 
                      << setw(18) << "SLAPTAZODIS"
                      << setw(18) << "SUKURIMO DATA" << endl;
-                cout << string(60, '-') << endl;
+                cout << string(80, '-') << endl;
 
-                for (const Paskyra& paskyra : paskyros) {
+                for (const Paskyra& paskyra : saugykla.paskyros) {
                     cout << left << setw(5)  << paskyra.id 
                          << setw(18) << paskyra.svetaine 
                          << setw(18) << paskyra.vardas 
@@ -116,7 +66,7 @@ void tvarkykle::perziuretiPaskyras() {
 int tvarkykle::gautiPasirinkima() {
     int pasirinkimas;
 
-    skaitytiFaila();
+    saugykla.skaitytiFaila();
 
     while (true) {
         #ifdef _WIN32
@@ -181,8 +131,12 @@ bool tvarkykle::tikrinimasSlaptazodzio(const std::string& slaptazodis) {
 }
         
 void tvarkykle::irasytiPaskyraUI() {
+
+    saugykla.skaitytiFaila();
+
     Paskyra naujaPaskyra;
-    naujaPaskyra.id = paskyros.size() + 1;
+
+    naujaPaskyra.id = saugykla.paskyros.size() + 1;
     cout << "Iveskite svetaine: ";
     getline(cin, naujaPaskyra.svetaine);
     cout << "Iveskite vartotojo varda: ";
@@ -196,10 +150,10 @@ void tvarkykle::irasytiPaskyraUI() {
             cout << "Slaptazodis turi buti bent 8 simboliu, ir tureti didziaja raide, maziaja raide, skaiciu ir specialu simboli." << endl;
         }
     } while (!tikrinimasSlaptazodzio(slaptazodis));
-    
+
     naujaPaskyra.slaptazodis = slaptazodis;
     naujaPaskyra.sukurta = dabartinisLaikas();
-    issaugotiPaskyra(naujaPaskyra);
+    saugykla.issaugotiPaskyra(naujaPaskyra);
 
     cout << "Paskyra sekmingai issaugota !" << endl;
 }       
@@ -208,18 +162,6 @@ void tvarkykle::lauktiEnter() {
     cout << "\nSpauskite ENTER, kad gryztumete i meniu...";
     cin.ignore(1000, '\n');
     cin.get();
-}
-
-void tvarkykle::zodzioTaisymas(std::string& svetaine) {
-
-     if (svetaine.empty()) return;
-    // Pirmą raidę darome didžiąją
-    svetaine[0] = std::toupper(static_cast<unsigned char>(svetaine[0]));
-    // Visas likusias raides darome mažąsias
-    if (svetaine.size() > 1) {
-        std::transform(svetaine.begin() + 1, svetaine.end(), svetaine.begin() + 1,
-                       [](unsigned char c) { return std::tolower(c); });
-    }
 }
 
 void tvarkykle::rusiuotiPaskyras(){
@@ -244,9 +186,9 @@ void tvarkykle::rusiuotiPaskyras(){
         // Išvalome Enter simbolį
     cin.ignore(1000, '\n');
 
-    skaitytiFaila();
+    saugykla.skaitytiFaila();
 
-    if (paskyros.empty()) {
+    if (saugykla.paskyros.empty()) {
             cout << "\n[!] Nerasta paskyru rusiavimui." << endl;
             lauktiEnter();
             return; // Grįžtame į pagrindinį meniu
@@ -255,7 +197,7 @@ void tvarkykle::rusiuotiPaskyras(){
     switch (pasirinkimasRusiavimo) {
         //rusiavimas pagal Id nuo maziausio iki didiziausio
         case 1: {
-            sort(paskyros.begin(), paskyros.end(), [] (const Paskyra& maziausias, const Paskyra& didiaziausias ) {
+            sort(saugykla.paskyros.begin(), saugykla.paskyros.end(), [] (const Paskyra& maziausias, const Paskyra& didiaziausias ) {
                 return maziausias.id < didiaziausias.id;
             }); 
             perziuretiPaskyras();
@@ -264,7 +206,7 @@ void tvarkykle::rusiuotiPaskyras(){
         }
         //rusiavimas pagal svetaine Abeceles tvarka
         case 2:
-            sort(paskyros.begin(), paskyros.end(), [] (const Paskyra& a, const Paskyra& z ) {
+            sort(saugykla.paskyros.begin(), saugykla.paskyros.end(), [] (const Paskyra& a, const Paskyra& z ) {
                 return a.svetaine < z.svetaine;
             }); 
             perziuretiPaskyras();
@@ -282,17 +224,11 @@ void tvarkykle::rusiuotiPaskyras(){
         }
     }
 }
-
-string tvarkykle::dabartinisLaikas() { 
-    time_t dabar = time(0);
-    struct tm tstruct;
-    char buf[80];
-    tstruct = *localtime(&dabar);
     
-    strftime(buf, sizeof(buf), "%Y-%m-%d_%H:%M:%S", &tstruct);
-    
-    return std::string(buf); // Konvertuojame char masyvą į saugų C++ string
+     tvarkykle::tvarkykle() {
+        saugykla.skaitytiFaila();
 }
+
 
 
 
