@@ -1,5 +1,25 @@
 #include "irankiai.h"
 
+bool tikrinimasSlaptazodzio(const std::string& slaptazodis) {
+    if (slaptazodis.length() < 8) {
+        return false;
+    }
+    bool turiDidziaja = false;
+    bool turiMaziaja = false;
+    bool turiSkaiciu = false;
+    bool turiSpecialu = false;
+
+    for (char c : slaptazodis) {
+
+        if (isupper(c)) turiDidziaja = true;
+        else if (islower(c)) turiMaziaja = true;
+        else if (isdigit(c)) turiSkaiciu = true;
+        else if (ispunct(c)) turiSpecialu = true; 
+    }
+    
+    return turiDidziaja && turiMaziaja && turiSkaiciu && turiSpecialu;
+}
+
 std::string dabartinisLaikas() { 
     time_t dabar = time(0);
     struct tm tstruct;
