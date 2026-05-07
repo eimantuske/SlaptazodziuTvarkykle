@@ -1,0 +1,11 @@
+cmake_minimum_required(VERSION 4.3)
+
+project(SlaptazodziuTvarkykle)
+
+add_executable(programa 
+    main.cpp 
+    tvarkykle.cpp 
+    irankiai.cpp 
+    konfiguracija.cpp 
+    duomenuValdymas.cpp
+)
