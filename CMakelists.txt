@@ -1,11 +1,29 @@
-cmake_minimum_required(VERSION 4.3)
+cmake_minimum_required(VERSION 3.10) # 4.3 yra labai nauja versija, 3.10 dažniausiai užtenka
 
 project(SlaptazodziuTvarkykle)
 
+include_directories(include)
+
 add_executable(programa 
-    main.cpp 
-    tvarkykle.cpp 
-    irankiai.cpp 
-    konfiguracija.cpp 
-    duomenuValdymas.cpp
+    src/main.cpp 
+    src/tvarkykle.cpp 
+    src/irankiai.cpp 
+    src/konfiguracija.cpp 
+    src/duomenuValdymas.cpp
 )
+
+# --- FAILŲ VALDYMAS ---
+
+# Patikriname, ar failas egzistuoja "data" aplanke prieš kopijuodami
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/data/paskyros.txt")
+    configure_file(data/paskyros.txt paskyros.txt COPYONLY)
+else()
+    message(STATUS "paskyros.txt nerastas - programa pati jį sukurs paleidimo metu.")
+endif()
+
+# Patikriname, ar egzistuoja config.cfg pagrindiniame aplanke
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/config.cfg")
+    configure_file(config.cfg config.cfg COPYONLY)
+else()
+    message(STATUS "config.cfg nerastas - CMake praleidžia kopijavimą.")
+endif()

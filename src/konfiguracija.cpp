@@ -10,7 +10,7 @@ void Konfiguracija::sukurtiNumatytaji() {
         // Įrašome standartines eilutes į diską
         failas << "rodytiLaika=true\n";
         failas << "sleptiSlaptazodzius=true\n";
-        failas << "failas=paskyros.txt\n";
+        failas << "failas=data/paskyros.txt\n";
         failas.close();
         
         // Užkrauname tas pačias reikšmes ir į atmintį, kad iškart veiktų
