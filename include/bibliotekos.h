@@ -8,6 +8,7 @@
 #include <iomanip>
 #include <algorithm>
 #include <ctime>
+#include <vector>
 
 struct Paskyra {
     int id;

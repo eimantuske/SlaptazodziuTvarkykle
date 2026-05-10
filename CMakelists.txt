@@ -10,6 +10,8 @@ add_executable(programa
     src/irankiai.cpp 
     src/konfiguracija.cpp 
     src/duomenuValdymas.cpp
+    src/shifravimas.cpp
+    src/aes.c
 )
 
 # --- FAILŲ VALDYMAS ---
@@ -27,3 +29,5 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/config.cfg")
 else()
     message(STATUS "config.cfg nerastas - CMake praleidžia kopijavimą.")
 endif()
+
+include_directories(include)

@@ -35,7 +35,7 @@ void tvarkykle::rusiavimoMeniuUI() {
         cout << "[     (nuo A iki Z)               ]" << endl;
         cout << "[  3. Grizti                      ]" << endl;
         cout << "[=================================]" << endl;
-        
+       
 
 }
 
