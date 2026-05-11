@@ -42,3 +42,15 @@ void zodzioTaisymas(std::string& svetaine) {
                        [](unsigned char c) { return std::tolower(c); });
     }
 }
+
+void valytiEkrana(){
+
+    #ifdef _WIN32
+system("cls");
+#else
+system("clear");
+
+#endif
+ 
+
+}

@@ -116,52 +116,53 @@ void tvarkykle::lauktiEnter() {
 void tvarkykle::isvestiLentele() {
     
     konf.uzkrauti();
-    
+
+    bool sleptiSlaptazodi = konf.gautiLogini("sleptiSlaptazodzius", false); 
+    bool rodytiLaika = konf.gautiLogini("rodytiLaika", true);
+
     // 1. Antraštė (Header)
     cout << left << setw(5) << "ID" 
          << setw(18) << "SVETAINE" 
          << setw(18) << "VARTOTOJAS";
-    
-    if (!konf.nst.sleptiSlaptazodzius) {
+
+    if(!sleptiSlaptazodi){
         cout << setw(18) << "SLAPTAZODIS";
     } else {
         cout << setw(18) << "SLAPTAZODIS (PASLEPTAS)";
     }
 
-    if (konf.nst.rodytiLaika) cout << setw(20) << "DATA";
+    if (rodytiLaika) cout << setw(20) << "DATA";
     cout << endl;
-
-    // 2. Linija (priklauso nuo nustatymų ilgio)
-    int linijosIlgis = 60 + (konf.nst.rodytiLaika ? 20 : 0);
+    
+    int linijosIlgis = 60 + (rodytiLaika ? 20 : 0);
     cout << string(linijosIlgis, '-') << endl;
 
-    // 3. Duomenys
     for (const auto& p : saugykla.paskyros) {
         cout << left << setw(5) << p.id 
              << setw(18) << p.svetaine 
              << setw(18) << p.vardas;
 
-        if (konf.nst.sleptiSlaptazodzius) {
+    if (sleptiSlaptazodi) {
             cout << setw(18) << "********";
         } else {
             cout << setw(18) << p.slaptazodis;
         }
 
-        if (konf.nst.rodytiLaika) cout << setw(20) << p.sukurta;
+        if (rodytiLaika) cout << setw(20) << p.sukurta;
         cout << endl;
-    }
+    }       
 }
 
 void tvarkykle::vykdyti() {
+
+    duomenuValdymas valdyti;
     // Failą nuskaitome TIK VIENĄ KARTĄ startuojant programai
     saugykla.skaitytiFaila();
 
+
     while (true) {
-        #ifdef _WIN32
-            system("cls");
-        #else
-            system("clear");
-        #endif
+        
+        valytiEkrana(); 
 
         meniuUI(); // 1. Parodome meniu
 
@@ -194,11 +195,8 @@ void tvarkykle::rusiuotiPaskyras() {
     }
 
     while (true) {
-        #ifdef _WIN32
-            system("cls");
-        #else
-            system("clear");
-        #endif
+        
+        valytiEkrana();
 
         rusiavimoMeniuUI();
 

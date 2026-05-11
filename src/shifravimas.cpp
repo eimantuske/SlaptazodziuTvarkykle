@@ -1,6 +1,7 @@
 #include "shifravimas.h"
 #include "aes.hpp"
 #include "bibliotekos.h"
+#include "irankiai.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -37,6 +38,9 @@ string raktovedimas() {
         cout << "Pirmas paleidimas. Sukurkite master slaptazodi." << endl;
         
         while (true) {
+
+            valytiEkrana();
+
             cout << "Naujas slaptazodis: ";
             cin >> ivestasSlaptazodis;
             cout << "Pakartokite slaptazodi: ";
@@ -60,6 +64,9 @@ string raktovedimas() {
 
     // SCENARIJUS B: Atidarymas
     while (true) {
+
+         valytiEkrana();
+
         cout << "Iveskite slaptazodi: ";
         cin >> ivestasSlaptazodis;
 

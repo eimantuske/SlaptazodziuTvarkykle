@@ -51,3 +51,4 @@ void duomenuValdymas::issaugotiPaskyra(const Paskyra& paskyra) {
     paskyros.push_back(paskyra);   
     rasytiFaila(); // Kiekvieną kartą pridedant paskyrą, atnaujiname .txt failą
 }
+

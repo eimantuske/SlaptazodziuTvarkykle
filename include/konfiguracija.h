@@ -1,24 +1,22 @@
 #pragma once
 #include <string>
-
-struct nustatymai {
-    bool rodytiLaika;
-    bool sleptiSlaptazodzius;
-
-    
-    std::string failas = "paskyros.txt";
-};
+#include <unordered_map>
 
 class Konfiguracija {
 private:
     const std::string configVardas = "config.cfg";
+
+    std::unordered_map<std::string, std::string> nustatymai;
     
     void sukurtiNumatytaji();
+    std::string nuimtiTarpus(const std::string& tekstas);
 
 public:
-   
-    nustatymai nst;
 
     void uzkrauti();
+
+    std::string gautiTeksta(const std::string& raktas, const std::string& numatytoji = "");
+    bool gautiLogini(const std::string& raktas, bool numatytoji );
+
 };
 
