@@ -18,9 +18,7 @@ int main() {
     config.uzkrauti(); 
     sistema.vykdyti();
 
-    // 3. Pabaigoje, prieš išeinant, vėl užšifruojame
-    cout << "Uzsifruojama..." << endl;
-    // Nurodome "paskyros.txt", o funkcija pati sukurs "paskyros.enc"
+
     if (apdorotiFaila("paskyros.txt", issaugotasRaktas)) {
         remove("paskyros.txt"); 
         cout << "Duomenys saugus." << endl;

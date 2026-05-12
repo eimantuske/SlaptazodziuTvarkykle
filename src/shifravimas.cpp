@@ -2,6 +2,7 @@
 #include "aes.hpp"
 #include "bibliotekos.h"
 #include "irankiai.h"
+#include "tvarkykle.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -29,6 +30,9 @@ bool failasEgzistuoja(const string& vardas) {
 using namespace std;
 
 string raktovedimas() {
+
+    tvarkykle ui;
+
     string ivestasSlaptazodis;
     string seifas = "paskyros.enc";
 
@@ -40,6 +44,8 @@ string raktovedimas() {
         while (true) {
 
             valytiEkrana();
+
+            ui.LogoPrint();
 
             cout << "Naujas slaptazodis: ";
             cin >> ivestasSlaptazodis;
@@ -55,7 +61,7 @@ string raktovedimas() {
                 // Užrakiname (tai sukurs paskyros.enc)
                 apdorotiFaila("paskyros.txt", ivestasSlaptazodis);
                 
-                cout << "Seifas sukurtas. Galite dirbti." << endl;
+                cout << "Seifas sukurtas. Galite dirbti.\n" << endl;
                 return ivestasSlaptazodis;
             }
             cout << "Slaptazodziai nesutampa!" << endl;
@@ -66,6 +72,8 @@ string raktovedimas() {
     while (true) {
 
          valytiEkrana();
+
+         ui.LogoPrint();
 
         cout << "Iveskite slaptazodi: ";
         cin >> ivestasSlaptazodis;
