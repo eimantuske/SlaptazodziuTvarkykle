@@ -1,3 +1,4 @@
+#include "baze.h"
 #include "duomenuValdymas.h"
 #include "irankiai.h"
 #include <iostream>
@@ -6,7 +7,7 @@
 using namespace std;
 
 // Svarbu: 'failas' kintamasis tavo klasėje turi būti "paskyros.txt"
-void duomenuValdymas::skaitytiFaila() {
+void duomenuValdymas::skaityti() {
     paskyros.clear();
     
     // Skaitome iš iššifruoto laikino failo
@@ -36,7 +37,7 @@ void duomenuValdymas::rasytiFaila() {
 
     for (const Paskyra& paskyra : paskyros) {
         string keitmasDidRaide = paskyra.svetaine;
-        zodzioTaisymas(keitmasDidRaide); // Tavo papildoma funkcija
+        SaugumoIrankiai::zodzioTaisymas(keitmasDidRaide); // Tavo papildoma funkcija
         
         isvestis << paskyra.id << " "
                  << keitmasDidRaide << " "
@@ -50,5 +51,17 @@ void duomenuValdymas::rasytiFaila() {
 void duomenuValdymas::issaugotiPaskyra(const Paskyra& paskyra) {
     paskyros.push_back(paskyra);   
     rasytiFaila(); // Kiekvieną kartą pridedant paskyrą, atnaujiname .txt failą
+}
+
+void duomenuValdymas::rusiuotiPagalID() {
+    std::sort(paskyros.begin(), paskyros.end(), [](const Paskyra& a, const Paskyra& b) {
+        return a.id < b.id;
+    });
+}
+
+void duomenuValdymas::rusiuotiPagalSvetaine() {
+    std::sort(paskyros.begin(), paskyros.end(), [](const Paskyra& a, const Paskyra& b) {
+        return a.svetaine < b.svetaine;
+    });
 }
 

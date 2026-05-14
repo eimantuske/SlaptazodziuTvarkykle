@@ -43,7 +43,7 @@ string raktovedimas() {
         
         while (true) {
 
-            valytiEkrana();
+            SaugumoIrankiai::valytiEkrana();
 
             ui.LogoPrint();
 
@@ -71,7 +71,7 @@ string raktovedimas() {
     // SCENARIJUS B: Atidarymas
     while (true) {
 
-         valytiEkrana();
+         SaugumoIrankiai::valytiEkrana();
 
          ui.LogoPrint();
 

@@ -1,10 +1,18 @@
 #pragma once
+#include <baze.h>
 #include "bibliotekos.h"
 #include "duomenuValdymas.h"
 #include "irankiai.h"
 #include "konfiguracija.h"
 
-class tvarkykle {
+class programosVariklis {
+    public:
+        virtual ~programosVariklis() {}
+        virtual void vykdyti() = 0;
+
+};
+
+class tvarkykle : public programosVariklis {
     private:
         duomenuValdymas saugykla;  
         Konfiguracija konf;  
@@ -21,7 +29,10 @@ class tvarkykle {
         void perziuretiPaskyras();
         int gautiPasirinkima();
         tvarkykle();
+
+        ~tvarkykle() override;
+
         void isvestiLentele();
-        void vykdyti();
+        void vykdyti() override;
         
 };

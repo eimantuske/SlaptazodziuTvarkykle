@@ -1,10 +1,10 @@
 #pragma once
-#include "bibliotekos.h"
+#include <string>
 
-bool tikrinimasSlaptazodzio(const std::string& slaptazodis);
- 
-void zodzioTaisymas(std::string& svetaine);
-
-std::string dabartinisLaikas(); 
-
-void valytiEkrana();
+class SaugumoIrankiai {
+    public:
+        static bool tikrinimasSlaptazodzio(const std::string& slaptazodis);
+        static void zodzioTaisymas(std::string& svetaine);
+        static std::string dabartinisLaikas();
+        static void valytiEkrana();
+};

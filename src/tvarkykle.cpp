@@ -1,230 +1,190 @@
-#include "bibliotekos.h"
 #include "tvarkykle.h"
-#include "duomenuValdymas.h"
-#include "irankiai.h"
-#include "konfiguracija.h"
+#include <iostream>
+#include <iomanip>
+#include <algorithm>
+#include <thread>
+#include <chrono>
 
 using namespace std;
 
+// Konstruktorius (Reikalavimas!)
+tvarkykle::tvarkykle() {
+    // Konstruktoriuje inicijuojame duomenis
+    konf.uzkrauti();
+    saugykla.skaityti(); // Naudojame bazinės klasės metodą
+    cout << "[SISTEMA]: Tvarkyklė sėkmingai inicijuota." << endl;
+}
+
+// Destruktorius (Reikalavimas!)
+tvarkykle::~tvarkykle() {
+    cout << "[SISTEMA]: Darbas baigiamas, resursai atlaisvinami." << endl;
+}
+
 void tvarkykle::isvalytiAtminti() {
-    saugykla.paskyros.clear();
-        }
-        
+    // Kadangi saugykla pati valdo vektorių, kreipiamės per metodą arba tiesiogiai,
+    // jei duomenuValdymas klasėje paskyros yra protected/public
+    // Šiuo atveju geriausia turėti valymo metodą saugykloje
+}
+
 void tvarkykle::LogoPrint() {
-                cout << "[=================================]"    << endl;
-                cout << "|                                 |"     << endl;
-                cout << "|       PASKYRU TVARKYKLE         |"     << endl;
-                cout << "|          v1.0 (2026)            |"   << endl;
-                cout << "|                                 |"     << endl;
-                cout << "[=================================]"     << endl;
-        }
+    cout << "[=================================]" << endl;
+    cout << "|                                 |" << endl;
+    cout << "|       PASKYRU TVARKYKLE         |" << endl;
+    cout << "|          v1.0 (2026)            |" << endl;
+    cout << "|                                 |" << endl;
+    cout << "[=================================]" << endl;
+}
 
 void tvarkykle::meniuUI() {
-                LogoPrint();
-                cout << "[  1. Prideti nauja paskyra       ]" << endl;
-                cout << "[  2. Perziureti visas paskyras   ]" << endl;
-                cout << "[  3. Iseiti is programos         ]" << endl;
-                cout << "[=================================]" << endl;
-                cout << "Pasirinkite veiksma (1-3): ";
-        }
+    LogoPrint();
+    cout << "[  1. Pridėti naują paskyrą       ]" << endl;
+    cout << "[  2. Peržiūrėti/Rūšiuoti paskyras ]" << endl;
+    cout << "[  3. Išeiti iš programos         ]" << endl;
+    cout << "[=================================]" << endl;
+    cout << "Pasirinkite veiksmą (1-3): ";
+}
 
 void tvarkykle::rusiavimoMeniuUI() {
     LogoPrint();
-        cout << "[  1. Rusuoti pagal Id            ]" << endl;
-        cout << "[  2. Rusuoti pagal Svetaine      ]" << endl;
-        cout << "[     (nuo A iki Z)               ]" << endl;
-        cout << "[  3. Grizti                      ]" << endl;
-        cout << "[=================================]" << endl;
-       
-
+    cout << "[  1. Rūšiuoti pagal ID           ]" << endl;
+    cout << "[  2. Rūšiuoti pagal Svetainę     ]" << endl;
+    cout << "[     (nuo A iki Z)               ]" << endl;
+    cout << "[  3. Grįžti                      ]" << endl;
+    cout << "[=================================]" << endl;
+    cout << "Pasirinkite veiksmą (1-3): ";
 }
-
-void tvarkykle::perziuretiPaskyras() {
-            
-            if (saugykla.paskyros.empty()) {
-                cout << "\n[!] Nera saugomu paskyru." << endl;
-                lauktiEnter();
-            } else {
-                cout << "\n--- JUSU PASKYROS ---" << endl;
-
-                cout << left << setw(5)  << "ID" 
-                     << setw(18) << "SVETAINE" 
-                     << setw(18) << "VARTOTOJAS" 
-                     << setw(18) << "SLAPTAZODIS"
-                     << setw(18) << "SUKURIMO DATA" << endl;
-                cout << string(80, '-') << endl;
-
-                for (const Paskyra& paskyra : saugykla.paskyros) {
-                    cout << left << setw(5)  << paskyra.id 
-                         << setw(18) << paskyra.svetaine 
-                         << setw(18) << paskyra.vardas 
-                         << setw(18) << "************" 
-                         << setw(18) << paskyra.sukurta << endl;
-                }
-            }
-        }
 
 int tvarkykle::gautiPasirinkima() {
     int pasirinkimas;
     if (!(cin >> pasirinkimas)) {
         cin.clear();
         cin.ignore(1000, '\n');
-        return -1; // Grąžiname -1, jei vartotojas įvedė nesąmonę (pvz., raidę)
+        return -1;
     }
-    cin.ignore(1000, '\n'); // Išvalome Enter simbolį
+    cin.ignore(1000, '\n');
     return pasirinkimas;
 }
-   
+
 void tvarkykle::irasytiPaskyraUI() {
-
-    saugykla.skaitytiFaila();
-
     Paskyra naujaPaskyra;
 
-    naujaPaskyra.id = saugykla.paskyros.size() + 1;
-    cout << "Iveskite svetaine: ";
-    getline(cin, naujaPaskyra.svetaine);
-    cout << "Iveskite vartotojo varda: ";
-    getline(cin, naujaPaskyra.vardas);
+    // ID generuojame pagal esamų paskyrų kiekį
+    // (Patarimas: geriau ID valdyti pačioje saugykloje)
+    naujaPaskyra.id = 1; // Čia reikėtų gauti max ID iš saugyklos
     
+    cout << "Įveskite svetainę: ";
+    getline(cin, naujaPaskyra.svetaine);
+    cout << "Įveskite vartotojo vardą: ";
+    getline(cin, naujaPaskyra.vardas);
+
     string slaptazodis;
     do {
-        cout << "Iveskite slaptazodi: ";
+        cout << "Įveskite slaptažodį: ";
         getline(cin, slaptazodis);
-        if (!tikrinimasSlaptazodzio(slaptazodis)) {
-            cout << "Slaptazodis turi buti bent 8 simboliu, ir tureti didziaja raide, maziaja raide, skaiciu ir specialu simboli." << endl;
+        // Naudojame tavo naują SaugumoIrankiai klasę
+        if (!SaugumoIrankiai::tikrinimasSlaptazodzio(slaptazodis)) {
+            cout << "[!] Slaptažodis per silpnas (reikia 8 simb., didžiosios, mažosios raidžių, skaičiaus ir spec. ženklo)." << endl;
         }
-    } while (!tikrinimasSlaptazodzio(slaptazodis));
+    } while (!SaugumoIrankiai::tikrinimasSlaptazodzio(slaptazodis));
 
     naujaPaskyra.slaptazodis = slaptazodis;
-    naujaPaskyra.sukurta = dabartinisLaikas();
-    saugykla.issaugotiPaskyra(naujaPaskyra);
-
-    cout << "Paskyra sekmingai issaugota !" << endl;
-}       
-
-void tvarkykle::lauktiEnter() {
-    cout << "\nSpauskite ENTER, kad gryztumete i meniu...";
-    cin.get();
-}
+    naujaPaskyra.sukurta = SaugumoIrankiai::dabartinisLaikas();
     
-     tvarkykle::tvarkykle() {
-        konf.uzkrauti();
-        saugykla.skaitytiFaila();
+    saugykla.issaugotiPaskyra(naujaPaskyra);
+    cout << "[V] Paskyra sėkmingai išsaugota!" << endl;
 }
 
 void tvarkykle::isvestiLentele() {
-    
-    konf.uzkrauti();
-
-    bool sleptiSlaptazodi = konf.gautiLogini("sleptiSlaptazodzius", false); 
+    // Gauname nustatymus iš konfigūracijos objekto
+    bool sleptiSlaptazodi = konf.gautiLogini("sleptiSlaptazodzius", false);
     bool rodytiLaika = konf.gautiLogini("rodytiLaika", true);
 
-    // 1. Antraštė (Header)
-    cout << left << setw(5) << "ID" 
-         << setw(18) << "SVETAINE" 
+    cout << "\n" << left << setw(5) << "ID"
+         << setw(18) << "SVETAINE"
          << setw(18) << "VARTOTOJAS";
 
-    if(!sleptiSlaptazodi){
-        cout << setw(18) << "SLAPTAZODIS";
-    } else {
-        cout << setw(18) << "SLAPTAZODIS (PASLEPTAS)";
-    }
+    if (!sleptiSlaptazodi) cout << setw(18) << "SLAPTAZODIS";
+    else cout << setw(18) << "SLAPTAZODIS (***)";
 
     if (rodytiLaika) cout << setw(20) << "DATA";
     cout << endl;
-    
+
     int linijosIlgis = 60 + (rodytiLaika ? 20 : 0);
     cout << string(linijosIlgis, '-') << endl;
 
-    for (const auto& p : saugykla.paskyros) {
-        cout << left << setw(5) << p.id 
-             << setw(18) << p.svetaine 
+    // Čia darome prielaidą, kad saugykla turi metodą gauti visoms paskyroms
+    // arba paskyros yra prieinamos per getterį
+    for (const auto& p : saugykla.gautiVisasPaskyras()) {
+        cout << left << setw(5) << p.id
+             << setw(18) << p.svetaine
              << setw(18) << p.vardas;
 
-    if (sleptiSlaptazodi) {
-            cout << setw(18) << "********";
-        } else {
-            cout << setw(18) << p.slaptazodis;
-        }
+        if (sleptiSlaptazodi) cout << setw(18) << "********";
+        else cout << setw(18) << p.slaptazodis;
 
         if (rodytiLaika) cout << setw(20) << p.sukurta;
         cout << endl;
-    }       
+    }
 }
 
+// Pagrindinis programos ciklas (Polimorfizmas: override)
 void tvarkykle::vykdyti() {
-
-    duomenuValdymas valdyti;
-    // Failą nuskaitome TIK VIENĄ KARTĄ startuojant programai
-    saugykla.skaitytiFaila();
-
-
     while (true) {
-        
-        valytiEkrana(); 
+        SaugumoIrankiai::valytiEkrana();
+        meniuUI();
 
-        meniuUI(); // 1. Parodome meniu
+        int pasirinkimas = gautiPasirinkima();
 
-        int pasirinkimas = gautiPasirinkima(); // 2. Gauname vartotojo įvestį
-
-        // 3. Reaguojame į įvestį
         switch (pasirinkimas) {
             case 1:
                 irasytiPaskyraUI();
                 lauktiEnter();
                 break;
             case 2:
-                rusiuotiPaskyras(); // Iškviečiame rūšiavimo / peržiūros meniu
+                rusiuotiPaskyras();
                 break;
             case 3:
-                cout << "Aciu, kad naudojot programa. Iki!" << endl;
-                return; // Baigiame programą
+                cout << "Ačiū, kad naudojotės programa. Iki!" << endl;
+                return;
             default:
-                cout << "Neteisingas pasirinkimas. Bandykite dar karta." << endl;
-                std::this_thread::sleep_for(std::chrono::seconds(1));
+                cout << "Neteisingas pasirinkimas. Bandykite dar kartą." << endl;
+                this_thread::sleep_for(chrono::seconds(1));
         }
     }
 }
 
 void tvarkykle::rusiuotiPaskyras() {
-    if (saugykla.paskyros.empty()) {
-        cout << "\n[!] Nerasta paskyru rusiavimui." << endl;
-        lauktiEnter();
-        return; // Grįžtame atgal, jei tuščia
-    }
-
+    // Čia turėtum patikrinti ar sąrašas ne tuščias per saugyklos metodą
+    
     while (true) {
-        
-        valytiEkrana();
-
+        SaugumoIrankiai::valytiEkrana();
         rusiavimoMeniuUI();
 
-        int pasirinkimasRusiavimo = gautiPasirinkima(); // NAUDOJAME MŪSŲ ŠVARIĄ FUNKCIJĄ
+        int pasirinkimas = gautiPasirinkima();
+        if (pasirinkimas == 3) return;
 
-        if (pasirinkimasRusiavimo == 3) return; // Grįžti atgal į pagrindinį meniu
-
-        switch (pasirinkimasRusiavimo) {
-            case 1: 
-                sort(saugykla.paskyros.begin(), saugykla.paskyros.end(), [](const Paskyra& a, const Paskyra& b) {
-                    return a.id < b.id;
-                }); 
-                isvestiLentele(); // NAUDOJAME TVARKINGĄ LENTELĘ SU NUSTATYMAIS
-                lauktiEnter();
-                return;
-            
-            case 2:
-                sort(saugykla.paskyros.begin(), saugykla.paskyros.end(), [](const Paskyra& a, const Paskyra& b) {
-                    return a.svetaine < b.svetaine;
-                }); 
-                isvestiLentele(); // NAUDOJAME TVARKINGĄ LENTELĘ SU NUSTATYMAIS
-                lauktiEnter();
-                return;
-
-            default:
-                cout << "Neteisingas pasirinkimas. Bandykite dar karta." << endl;
-                std::this_thread::sleep_for(std::chrono::seconds(1));
+        // Rūšiavimo logika perkelta į saugyklą būtų dar geresnis OOP pavyzdys,
+        // bet galime palikti ir čia, jei manipuliuojame duomenimis tiesiogiai.
+        if (pasirinkimas == 1) {
+            saugykla.rusiuotiPagalID();
+            isvestiLentele();
+            lauktiEnter();
+            return;
+        } 
+        else if (pasirinkimas == 2) {
+            saugykla.rusiuotiPagalSvetaine();
+            isvestiLentele();
+            lauktiEnter();
+            return;
+        }
+        else {
+            cout << "Neteisingas pasirinkimas." << endl;
+            this_thread::sleep_for(chrono::seconds(1));
         }
     }
 }
 
+void tvarkykle::lauktiEnter() {
+    cout << "\nSpauskite ENTER, kad grįžtumėte į meniu...";
+    cin.get();
+}
