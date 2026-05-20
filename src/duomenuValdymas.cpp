@@ -18,9 +18,13 @@ void duomenuValdymas::skaityti() {
         return;
     }
 
-    Paskyra naujaPaskyra;
+    int tempId;
+    string tempSvetaine, tempVardas, tempSlaptazodis, tempSukurta;
+    
     // Skaitome duomenis (tikimės, kad tarp duomenų nėra tarpų)
-    while (ivestis >> naujaPaskyra.id >> naujaPaskyra.svetaine >> naujaPaskyra.vardas >> naujaPaskyra.slaptazodis >> naujaPaskyra.sukurta) {
+    while (ivestis >> tempId >> tempSvetaine >> tempVardas >> tempSlaptazodis >> tempSukurta) {
+        // Sukuriame objektą per konstruktorių ir įdedame į vektorių
+        Paskyra naujaPaskyra(tempId, tempSvetaine, tempVardas, tempSlaptazodis, tempSukurta);
         paskyros.push_back(naujaPaskyra);
     }
     ivestis.close();
@@ -36,14 +40,14 @@ void duomenuValdymas::rasytiFaila() {
     }
 
     for (const Paskyra& paskyra : paskyros) {
-        string keitmasDidRaide = paskyra.svetaine;
+        string keitmasDidRaide = paskyra.getSvetaine();
         SaugumoIrankiai::zodzioTaisymas(keitmasDidRaide); // Tavo papildoma funkcija
         
-        isvestis << paskyra.id << " "
+        isvestis << paskyra.getId() << " "
                  << keitmasDidRaide << " "
-                 << paskyra.vardas << " "
-                 << paskyra.slaptazodis << " "
-                 << paskyra.sukurta << endl;
+                 << paskyra.getVardas() << " "
+                 << paskyra.getSlaptazodis() << " "
+                 << paskyra.getSukurta() << endl;
     }
     isvestis.close();
 }
@@ -55,13 +59,13 @@ void duomenuValdymas::issaugotiPaskyra(const Paskyra& paskyra) {
 
 void duomenuValdymas::rusiuotiPagalID() {
     std::sort(paskyros.begin(), paskyros.end(), [](const Paskyra& a, const Paskyra& b) {
-        return a.id < b.id;
+        return a.getId() < b.getId();
     });
 }
 
 void duomenuValdymas::rusiuotiPagalSvetaine() {
     std::sort(paskyros.begin(), paskyros.end(), [](const Paskyra& a, const Paskyra& b) {
-        return a.svetaine < b.svetaine;
+        return a.getSvetaine() < b.getSvetaine();
     });
 }
 

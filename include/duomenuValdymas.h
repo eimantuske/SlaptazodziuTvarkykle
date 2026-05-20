@@ -4,6 +4,9 @@
 
 // Paveldim iš FailoSąsajos (arba kito pavadinimo, kurį pasirinkai Baze.h faile)
 class duomenuValdymas : public failoPagrindas {
+    private:
+        std::string failas = "paskyros.txt";
+        std::vector<Paskyra> paskyros;
     public:
         // 1. Pervadiname arba pridedame skaityti(), kad atitiktų Bazinę klasę
         void skaityti() override; 
@@ -18,7 +21,5 @@ class duomenuValdymas : public failoPagrindas {
         // 3. Leidžiame tvarkyklei saugiai gauti paskyras
         const std::vector<Paskyra>& gautiVisasPaskyras() const { return paskyros; }
 
-        // Kintamieji (geriau juos laikyti public, jei nenori keisti daug kodo kitur)
-        std::string failas = "paskyros.txt";
-        std::vector<Paskyra> paskyros;
+
 };

@@ -66,30 +66,33 @@ int tvarkykle::gautiPasirinkima() {
 }
 
 void tvarkykle::irasytiPaskyraUI() {
-    Paskyra naujaPaskyra;
 
-    // ID generuojame pagal esamų paskyrų kiekį
-    // (Patarimas: geriau ID valdyti pačioje saugykloje)
-    naujaPaskyra.id = 1; // Čia reikėtų gauti max ID iš saugyklos
+    string tempSvetaine, tempVardas, tempSlaptazodis;
     
-    cout << "Įveskite svetainę: ";
-    getline(cin, naujaPaskyra.svetaine);
-    cout << "Įveskite vartotojo vardą: ";
-    getline(cin, naujaPaskyra.vardas);
+    int naujasId = saugykla.gautiVisasPaskyras().size() + 1; // ID generuojame pagal esamų paskyrų kiekį
 
-    string slaptazodis;
+    cout << "Įveskite svetainę: ";
+
+    getline(cin, tempSvetaine);
+
+    cout << "Įveskite vartotojo vardą: ";
+
+    getline(cin, tempVardas);
+
+    
     do {
         cout << "Įveskite slaptažodį: ";
-        getline(cin, slaptazodis);
+        getline(cin, tempSlaptazodis);
         // Naudojame tavo naują SaugumoIrankiai klasę
-        if (!SaugumoIrankiai::tikrinimasSlaptazodzio(slaptazodis)) {
+        if (!SaugumoIrankiai::tikrinimasSlaptazodzio(tempSlaptazodis)) {
             cout << "[!] Slaptažodis per silpnas (reikia 8 simb., didžiosios, mažosios raidžių, skaičiaus ir spec. ženklo)." << endl;
         }
-    } while (!SaugumoIrankiai::tikrinimasSlaptazodzio(slaptazodis));
+    } while (!SaugumoIrankiai::tikrinimasSlaptazodzio(tempSlaptazodis));
 
-    naujaPaskyra.slaptazodis = slaptazodis;
-    naujaPaskyra.sukurta = SaugumoIrankiai::dabartinisLaikas();
-    
+   string tempSukurta = SaugumoIrankiai::dabartinisLaikas();
+   
+   Paskyra naujaPaskyra(naujasId, tempSvetaine, tempVardas, tempSlaptazodis, tempSukurta);
+
     saugykla.issaugotiPaskyra(naujaPaskyra);
     cout << "[V] Paskyra sėkmingai išsaugota!" << endl;
 }
@@ -115,14 +118,14 @@ void tvarkykle::isvestiLentele() {
     // Čia darome prielaidą, kad saugykla turi metodą gauti visoms paskyroms
     // arba paskyros yra prieinamos per getterį
     for (const auto& p : saugykla.gautiVisasPaskyras()) {
-        cout << left << setw(5) << p.id
-             << setw(18) << p.svetaine
-             << setw(18) << p.vardas;
+        cout << left << setw(5) << p.getId()
+             << setw(18) << p.getSvetaine()
+             << setw(18) << p.getVardas();
 
         if (sleptiSlaptazodi) cout << setw(18) << "********";
-        else cout << setw(18) << p.slaptazodis;
+        else cout << setw(18) << p.getSlaptazodis();
 
-        if (rodytiLaika) cout << setw(20) << p.sukurta;
+        if (rodytiLaika) cout << setw(20) << p.getSukurta();
         cout << endl;
     }
 }
@@ -141,6 +144,8 @@ void tvarkykle::vykdyti() {
                 lauktiEnter();
                 break;
             case 2:
+               konf.uzkrauti(); // Perkrauname nustatymus, kad atspindėtų pakeitimus
+
                 rusiuotiPaskyras();
                 break;
             case 3:
